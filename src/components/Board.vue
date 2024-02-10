@@ -1,4 +1,6 @@
 <script setup>
+import CellButton from "../components/CellButton.vue";
+
 const props = defineProps({
     width: Number,
     height: Number,
@@ -6,11 +8,6 @@ const props = defineProps({
 });
 
 const board = generateBoard(props.width, props.height, 38);
-
-//board[3][2] = "¤";
-//board[7][9] = "¤";
-//board[4][5] = "¤";
-//board[5][5] = "¤";
 
 function generateBoard(width, height, mines) {
     let array = new Array(width);
@@ -37,8 +34,6 @@ function generateBoard(width, height, mines) {
 function checkNeighbours(x, y) {
     let neighboursCount = 0;
 
-    console.log(board.length);
-
     for (let i = x - 1; i <= x + 1; i++) {
         if (i >= 0 && i < board.length)
             for (let j = y - 1; j <= y + 1; j++) {
@@ -47,30 +42,34 @@ function checkNeighbours(x, y) {
             }
     }
 
-    console.log(`Neighbours count of ${x} ${y} is: ${neighboursCount}`);
     return neighboursCount;
+}
+
+function checkCell(x, y) {
+    if (board[x][y] === "¤") console.log("it's joever");
+    else checkNeighbours(x, y);
 }
 </script>
 
 <template>
     <div class="stats">
         <div class="flags">000</div>
-        <div class="smiley">🙂</div>
+        <button class="smiley">🙂</button>
         <div class="time">000</div>
     </div>
     <table class="board">
         <tr class="board-row" v-for="(row, rowI) in board" :key="rowI">
-            <td
-                class="board-cell"
+            <CellButton
                 v-for="(cell, cellI) in row"
                 :key="cellI"
-                @click="checkNeighbours(rowI, cellI)"
-            >
-                <template v-if="cell === '¤'"> 💣 </template>
-                <template v-else>
-                    {{ checkNeighbours(rowI, cellI) }}
-                </template>
-            </td>
+                :cellData="{
+                    x: rowI,
+                    y: cellI,
+                    isBomb: cell,
+                    neighbours: checkNeighbours(rowI, cellI),
+                }"
+                @click="checkCell(rowI, cellI)"
+            />
         </tr>
     </table>
 </template>
@@ -83,15 +82,5 @@ function checkNeighbours(x, y) {
 
 .board {
     background-color: #ccc;
-}
-
-.board-cell {
-    --cell-size: 25px;
-    min-width: var(--cell-size);
-    min-height: var(--cell-size);
-    line-height: var(--cell-size);
-    text-align: center;
-    vertical-align: middle;
-    background-color: #242424;
 }
 </style>
