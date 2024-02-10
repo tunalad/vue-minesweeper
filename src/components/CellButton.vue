@@ -1,15 +1,24 @@
 <script setup>
 import { ref } from "vue";
+
 const props = defineProps({
     cellData: Object,
 });
+const emits = defineEmits(["zeroClick"]);
 
 const clicked = ref(false);
 
 function printData() {
     console.log(props.cellData);
     clicked.value = true;
+    emits("zeroClick", props.cellData);
 }
+
+function simClick() {
+    clicked.value = true;
+}
+
+defineExpose({ simClick, printData });
 </script>
 
 <template>

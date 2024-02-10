@@ -1,5 +1,6 @@
 <script setup>
 import CellButton from "../components/CellButton.vue";
+import { ref } from "vue";
 
 const props = defineProps({
     width: Number,
@@ -7,7 +8,9 @@ const props = defineProps({
     bombs: Number,
 });
 
-const board = generateBoard(props.width, props.height, 38);
+const board = generateBoard(props.width, props.height, props.bombs);
+
+const cellButtons = ref({});
 
 function generateBoard(width, height, mines) {
     let array = new Array(width);
@@ -45,9 +48,31 @@ function checkNeighbours(x, y) {
     return neighboursCount;
 }
 
-function checkCell(x, y) {
-    if (board[x][y] === "¤") console.log("it's joever");
-    else checkNeighbours(x, y);
+function zeroClick(data) {
+    if (data.neighbours === 0) {
+        let x = data.x;
+        let y = data.y;
+
+        for (let i = x - 1; i <= x + 1; i++) {
+            if (i >= 0 && i < board.length) {
+                for (let j = y - 1; j <= y + 1; j++) {
+                    if (j >= 0 && j < board.length && (i !== x || j !== y))
+                        simClick(i, j);
+                }
+            }
+        }
+    }
+}
+
+function simClick(x, y) {
+    const key = `cell-${x}-${y}`;
+    if (cellButtons.value[key]) {
+        console.log("AAA");
+        cellButtons.value[key].simClick();
+        cellButtons.value[key] = null;
+
+        zeroClick({ x: x, y: y, neighbours: checkNeighbours(x, y) });
+    }
 }
 </script>
 
@@ -68,7 +93,8 @@ function checkCell(x, y) {
                     isBomb: cell,
                     neighbours: checkNeighbours(rowI, cellI),
                 }"
-                @click="checkCell(rowI, cellI)"
+                :ref="(el) => (cellButtons[`cell-${rowI}-${cellI}`] = el)"
+                @zeroClick="zeroClick"
             />
         </tr>
     </table>
