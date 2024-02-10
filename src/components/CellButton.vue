@@ -7,6 +7,7 @@ const props = defineProps({
 const emits = defineEmits(["zeroClick"]);
 
 const clicked = ref(false);
+const flagged = ref(false);
 
 function printData() {
     console.log(props.cellData);
@@ -18,12 +19,32 @@ function simClick() {
     clicked.value = true;
 }
 
+function flagButton() {
+    console.log("AAAA");
+    flagged.value = !flagged.value;
+}
+
 defineExpose({ simClick, printData });
 </script>
 
 <template>
-    <td v-if="!clicked"><button @click="printData"></button></td>
+    <!-- not flagged button -->
+    <td v-if="!clicked && !flagged">
+        <button @click="printData" @contextmenu.prevent="flagButton"></button>
+    </td>
+    <!-- flagged button -->
+    <td v-else-if="!clicked && flagged">
+        <button
+            @click="none"
+            @contextmenu.prevent="flagButton"
+            class="disabled"
+        >
+            🚩
+        </button>
+    </td>
+    <!-- bomb -->
     <td v-else-if="clicked && props.cellData.isBomb === '¤'">💣</td>
+    <!-- no bomb -->
     <td v-else>
         {{ props.cellData.neighbours }}
     </td>
@@ -54,5 +75,9 @@ button {
     max-width: var(--cell-size);
     max-height: var(--cell-size);
     line-height: var(--cell-size);
+}
+
+button.disabled {
+    transition: none;
 }
 </style>

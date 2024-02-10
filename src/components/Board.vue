@@ -67,10 +67,9 @@ function zeroClick(data) {
 function simClick(x, y) {
     const key = `cell-${x}-${y}`;
     if (cellButtons.value[key]) {
-        console.log("AAA");
         cellButtons.value[key].simClick();
-        cellButtons.value[key] = null;
 
+        cellButtons.value[key] = null;
         zeroClick({ x: x, y: y, neighbours: checkNeighbours(x, y) });
     }
 }
