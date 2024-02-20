@@ -8,6 +8,8 @@ const props = defineProps({
     bombs: Number,
 });
 
+const emits = defineEmits(["gameOver"]);
+
 const board = generateBoard(props.width, props.height, props.bombs);
 
 const cellButtons = ref({});
@@ -73,6 +75,11 @@ function simClick(x, y) {
         zeroClick({ x: x, y: y, neighbours: checkNeighbours(x, y) });
     }
 }
+
+function mineClicked(e) {
+    console.log(e);
+    emits("gameOver");
+}
 </script>
 
 <template>
@@ -89,6 +96,7 @@ function simClick(x, y) {
                 }"
                 :ref="(el) => (cellButtons[`cell-${rowI}-${cellI}`] = el)"
                 @zeroClick="zeroClick"
+                @mineClicked="mineClicked"
             />
         </tr>
     </table>
@@ -97,5 +105,9 @@ function simClick(x, y) {
 <style scoped>
 .board {
     background-color: #ccc;
+}
+
+.mine-clicked {
+    background-color: red;
 }
 </style>

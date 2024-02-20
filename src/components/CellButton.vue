@@ -4,7 +4,7 @@ import { ref } from "vue";
 const props = defineProps({
     cellData: Object,
 });
-const emits = defineEmits(["zeroClick"]);
+const emits = defineEmits(["zeroClick", "mineClicked"]);
 
 const clicked = ref(false);
 const flagged = ref(false);
@@ -12,7 +12,8 @@ const flagged = ref(false);
 function printData() {
     console.log(props.cellData);
     clicked.value = true;
-    emits("zeroClick", props.cellData);
+    if (props.cellData.isBomb !== "¤") emits("zeroClick", props.cellData);
+    else emits("mineClicked", props.cellData);
 }
 
 function simClick() {
@@ -43,7 +44,12 @@ defineExpose({ simClick, printData });
         </button>
     </td>
     <!-- bomb -->
-    <td v-else-if="clicked && props.cellData.isBomb === '¤'">💣</td>
+    <td
+        v-else-if="clicked && props.cellData.isBomb === '¤'"
+        style="background-color: red"
+    >
+        💣
+    </td>
     <!-- no bomb -->
     <td v-else>
         {{ props.cellData.neighbours }}
