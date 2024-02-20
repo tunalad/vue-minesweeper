@@ -98,8 +98,7 @@ function checkLeftCells(x, y) {
         }
     }
 
-    if (count_c + props.bombs === props.width * props.height)
-        emits("gameWon")
+    if (count_c + props.bombs === props.width * props.height) emits("gameWon");
 }
 </script>
 
