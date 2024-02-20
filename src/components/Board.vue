@@ -76,11 +76,6 @@ function simClick(x, y) {
 </script>
 
 <template>
-    <div class="stats">
-        <div class="flags">000</div>
-        <button class="smiley">🙂</button>
-        <div class="time">000</div>
-    </div>
     <table class="board">
         <tr class="board-row" v-for="(row, rowI) in board" :key="rowI">
             <CellButton
@@ -100,11 +95,6 @@ function simClick(x, y) {
 </template>
 
 <style scoped>
-.stats {
-    display: flex;
-    justify-content: space-between;
-}
-
 .board {
     background-color: #ccc;
 }
