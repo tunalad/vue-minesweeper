@@ -13,6 +13,10 @@ function resetBoard() {
 function gameOver() {
     smiley.value.innerText = "😵";
 }
+
+function gameWon() {
+    smiley.value.innerText = "😎";
+}
 </script>
 
 <template>
@@ -27,6 +31,7 @@ function gameOver() {
         :bombs="10"
         :key="boardKey"
         @gameOver="gameOver"
+        @gameWon="gameWon"
     />
 </template>
 

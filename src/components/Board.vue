@@ -8,9 +8,10 @@ const props = defineProps({
     bombs: Number,
 });
 
-const emits = defineEmits(["gameOver"]);
+const emits = defineEmits(["gameOver", "gameWon"]);
 
 const board = generateBoard(props.width, props.height, props.bombs);
+let boardState = board;
 
 const cellButtons = ref({});
 
@@ -58,8 +59,10 @@ function zeroClick(data) {
         for (let i = x - 1; i <= x + 1; i++) {
             if (i >= 0 && i < board.length) {
                 for (let j = y - 1; j <= y + 1; j++) {
-                    if (j >= 0 && j < board.length && (i !== x || j !== y))
+                    if (j >= 0 && j < board.length && (i !== x || j !== y)) {
                         simClick(i, j);
+                        boardState[i][j] = "c";
+                    }
                 }
             }
         }
@@ -80,6 +83,24 @@ function mineClicked(e) {
     console.log(e);
     emits("gameOver");
 }
+
+function checkLeftCells(x, y) {
+    boardState[x][y] = "c";
+    // count non "c" items in this 2d array
+    console.log(boardState);
+
+    let count_c = 0;
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+            if (board[i][j] === "c") {
+                count_c++;
+            }
+        }
+    }
+
+    if (count_c + props.bombs === props.width * props.height)
+        emits("gameWon")
+}
 </script>
 
 <template>
@@ -97,6 +118,7 @@ function mineClicked(e) {
                 :ref="(el) => (cellButtons[`cell-${rowI}-${cellI}`] = el)"
                 @zeroClick="zeroClick"
                 @mineClicked="mineClicked"
+                @click="checkLeftCells(rowI, cellI)"
             />
         </tr>
     </table>
