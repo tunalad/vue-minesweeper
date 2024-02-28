@@ -16,6 +16,7 @@ let boardState = board;
 const cellButtons = ref({});
 
 const firstClickMade = ref(false);
+const isGameOver = ref(false);
 
 function generateBoard(width, height, mines) {
     let array = new Array(width);
@@ -82,8 +83,8 @@ function simClick(x, y) {
 }
 
 function mineClicked(e) {
-    console.log(e);
     emits("gameOver");
+    isGameOver.value = true;
 }
 
 function checkLeftCells(x, y) {
@@ -94,7 +95,7 @@ function checkLeftCells(x, y) {
 
     boardState[x][y] = "c";
     // count non "c" items in this 2d array
-    console.log(boardState);
+    console.log("BB", boardState);
 
     let count_c = 0;
     for (let i = 0; i < board.length; i++) {
@@ -105,12 +106,15 @@ function checkLeftCells(x, y) {
         }
     }
 
-    if (count_c + props.bombs === props.width * props.height) emits("gameWon");
+    if (count_c + props.bombs === props.width * props.height) {
+        emits("gameWon");
+        isGameOver.value = true;
+    }
 }
 </script>
 
 <template>
-    <table class="board">
+    <table :class="{ board: true, 'game-over': isGameOver }">
         <tr class="board-row" v-for="(row, rowI) in board" :key="rowI">
             <CellButton
                 v-for="(cell, cellI) in row"
@@ -137,5 +141,9 @@ function checkLeftCells(x, y) {
 
 .mine-clicked {
     background-color: red;
+}
+
+.game-over {
+    pointer-events: none;
 }
 </style>

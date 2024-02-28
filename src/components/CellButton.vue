@@ -48,15 +48,22 @@ defineExpose({ simClick, printData });
         v-else-if="clicked && props.cellData.isBomb === '¤'"
         style="background-color: red"
     >
-        💣
+        <p>💣</p>
     </td>
     <!-- no bomb -->
     <td v-else>
-        {{ props.cellData.neighbours }}
+        <p @click.prevent @contextmenu.prevent>
+            {{ props.cellData.neighbours }}
+        </p>
     </td>
 </template>
 
 <style scoped>
+p {
+    margin: 0;
+    padding: 0;
+}
+
 td,
 button {
     --cell-size: 25px;
