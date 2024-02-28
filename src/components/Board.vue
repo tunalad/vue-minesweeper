@@ -8,12 +8,14 @@ const props = defineProps({
     bombs: Number,
 });
 
-const emits = defineEmits(["gameOver", "gameWon"]);
+const emits = defineEmits(["gameOver", "gameWon", "firstClick"]);
 
 const board = generateBoard(props.width, props.height, props.bombs);
 let boardState = board;
 
 const cellButtons = ref({});
+
+const firstClickMade = ref(false);
 
 function generateBoard(width, height, mines) {
     let array = new Array(width);
@@ -85,6 +87,11 @@ function mineClicked(e) {
 }
 
 function checkLeftCells(x, y) {
+    if (!firstClickMade.value) {
+        firstClickMade.value = true;
+        emits("firstClick");
+    }
+
     boardState[x][y] = "c";
     // count non "c" items in this 2d array
     console.log(boardState);
