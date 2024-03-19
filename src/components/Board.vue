@@ -75,8 +75,8 @@ function zeroClick(data) {
 function simClick(x, y, flagging = false, reveal = false) {
     const key = `cell-${x}-${y}`;
     if (cellButtons.value[key]) {
-        if (flagging) cellButtons.value[key].simFlag();
-        if (reveal) cellButtons.value[key].simClick(true);
+        if (flagging && !reveal) cellButtons.value[key].simFlag();
+        else if (reveal && !flagging) cellButtons.value[key].simClick(true);
         else {
             cellButtons.value[key].simClick();
 
@@ -121,7 +121,7 @@ function checkLeftCells(x, y) {
 
         for (let i = 0; i < props.width; i++) {
             for (let j = 0; j < props.height; j++) {
-                if (boardState[i][j] === "¤") simClick(i, j, true);
+                if (boardState[i][j] === "¤") simClick(i, j, true, false);
             }
         }
     }
