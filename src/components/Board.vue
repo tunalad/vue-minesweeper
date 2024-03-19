@@ -72,12 +72,12 @@ function zeroClick(data) {
     }
 }
 
-function simClick(x, y, flagging = false) {
+function simClick(x, y, flagging = false, reveal = false) {
     const key = `cell-${x}-${y}`;
     if (cellButtons.value[key]) {
-        if (flagging) {
-            cellButtons.value[key].simFlag();
-        } else {
+        if (flagging) cellButtons.value[key].simFlag();
+        if (reveal) cellButtons.value[key].simClick(true);
+        else {
             cellButtons.value[key].simClick();
 
             cellButtons.value[key] = null;
@@ -89,6 +89,12 @@ function simClick(x, y, flagging = false) {
 function mineClicked(e) {
     emits("gameOver");
     isGameOver.value = true;
+
+    for (let i = 0; i < props.width; i++) {
+        for (let j = 0; j < props.height; j++) {
+            if (boardState[i][j] === "¤") simClick(i, j, false, true);
+        }
+    }
 }
 
 function checkLeftCells(x, y) {

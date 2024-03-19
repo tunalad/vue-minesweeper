@@ -8,6 +8,7 @@ const emits = defineEmits(["zeroClick", "mineClicked"]);
 
 const clicked = ref(false);
 const flagged = ref(false);
+const revealed = ref(false);
 
 function printData() {
     clicked.value = true;
@@ -15,8 +16,10 @@ function printData() {
     else emits("mineClicked", props.cellData);
 }
 
-function simClick() {
-    clicked.value = true;
+function simClick(reveal = false) {
+    if (reveal) {
+        revealed.value = true;
+    } else clicked.value = true;
 }
 
 function simFlag() {
@@ -32,7 +35,7 @@ defineExpose({ simClick, printData, simFlag });
 
 <template>
     <!-- not flagged button -->
-    <td v-if="!clicked && !flagged">
+    <td v-if="!clicked && !flagged && !revealed">
         <button @click="printData" @contextmenu.prevent="flagButton"></button>
     </td>
     <!-- flagged button -->
@@ -45,13 +48,18 @@ defineExpose({ simClick, printData, simFlag });
             🚩
         </button>
     </td>
-    <!-- bomb -->
+    <!-- bomb bombed -->
     <td
         v-else-if="clicked && props.cellData.isBomb === '¤'"
         style="background-color: red"
     >
         <p>💣</p>
     </td>
+    <!-- bomb revealed -->
+    <td v-else-if="revealed && props.cellData.isBomb === '¤'">
+        <p>💣</p>
+    </td>
+
     <!-- no bomb -->
     <td v-else>
         <p @click.prevent @contextmenu.prevent>
