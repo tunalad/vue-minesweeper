@@ -10,7 +10,6 @@ const clicked = ref(false);
 const flagged = ref(false);
 
 function printData() {
-    console.log(props.cellData);
     clicked.value = true;
     if (props.cellData.isBomb !== "¤") emits("zeroClick", props.cellData);
     else emits("mineClicked", props.cellData);
@@ -20,12 +19,15 @@ function simClick() {
     clicked.value = true;
 }
 
+function simFlag() {
+    flagged.value = true;
+}
+
 function flagButton() {
-    console.log("AAAA");
     flagged.value = !flagged.value;
 }
 
-defineExpose({ simClick, printData });
+defineExpose({ simClick, printData, simFlag });
 </script>
 
 <template>

@@ -72,13 +72,17 @@ function zeroClick(data) {
     }
 }
 
-function simClick(x, y) {
+function simClick(x, y, flagging = false) {
     const key = `cell-${x}-${y}`;
     if (cellButtons.value[key]) {
-        cellButtons.value[key].simClick();
+        if (flagging) {
+            cellButtons.value[key].simFlag();
+        } else {
+            cellButtons.value[key].simClick();
 
-        cellButtons.value[key] = null;
-        zeroClick({ x: x, y: y, neighbours: checkNeighbours(x, y) });
+            cellButtons.value[key] = null;
+            zeroClick({ x: x, y: y, neighbours: checkNeighbours(x, y) });
+        }
     }
 }
 
@@ -95,7 +99,6 @@ function checkLeftCells(x, y) {
 
     boardState[x][y] = "c";
     // count non "c" items in this 2d array
-    console.log("BB", boardState);
 
     let count_c = 0;
     for (let i = 0; i < board.length; i++) {
@@ -109,6 +112,12 @@ function checkLeftCells(x, y) {
     if (count_c + props.bombs === props.width * props.height) {
         emits("gameWon");
         isGameOver.value = true;
+
+        for (let i = 0; i < props.width; i++) {
+            for (let j = 0; j < props.height; j++) {
+                if (boardState[i][j] === "¤") simClick(i, j, true);
+            }
+        }
     }
 }
 </script>
