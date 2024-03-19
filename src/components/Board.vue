@@ -140,6 +140,7 @@ function checkLeftCells(x, y) {
                     isBomb: cell,
                     neighbours: checkNeighbours(rowI, cellI),
                 }"
+                :isGameOver="isGameOver"
                 :ref="(el) => (cellButtons[`cell-${rowI}-${cellI}`] = el)"
                 @zeroClick="zeroClick"
                 @mineClicked="mineClicked"

@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 const props = defineProps({
     cellData: Object,
+    isGameOver: Boolean,
 });
 const emits = defineEmits(["zeroClick", "mineClicked"]);
 
@@ -44,6 +45,11 @@ defineExpose({ simClick, printData, simFlag });
             @click="none"
             @contextmenu.prevent="flagButton"
             class="disabled"
+            :style="
+                props.cellData.isBomb !== '¤' && isGameOver
+                    ? { backgroundColor: 'red' }
+                    : {}
+            "
         >
             🚩
         </button>
@@ -57,7 +63,11 @@ defineExpose({ simClick, printData, simFlag });
     </td>
     <!-- bomb revealed -->
     <td v-else-if="revealed && props.cellData.isBomb === '¤'">
-        <p>💣</p>
+        <button>💣</button>
+    </td>
+    <!-- flag wrong revealed -->
+    <td v-else-if="revealed && flagged && props.cellData.isBomb !== '¤'">
+        <button>🚩</button>
     </td>
 
     <!-- no bomb -->
