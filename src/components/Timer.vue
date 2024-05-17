@@ -40,5 +40,5 @@ watchEffect(() => {
 </script>
 
 <template>
-    <div>{{ timerTime }}</div>
+    <div>{{ String(timerTime).padStart(3, "0") }}</div>
 </template>

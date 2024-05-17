@@ -165,6 +165,7 @@ function countFlagged(isFlagged) {
 <style scoped>
 .board {
     background-color: #ccc;
+    padding: 0.25rem;
 }
 
 .mine-clicked {

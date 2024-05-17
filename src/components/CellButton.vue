@@ -51,7 +51,7 @@ defineExpose({ simClick, printData, simFlag });
             class="disabled"
             :style="
                 props.cellData.isBomb !== '¤' && isGameOver
-                    ? { backgroundColor: 'red' }
+                    ? { backgroundColor: '#722F37' }
                     : {}
             "
         >
@@ -61,7 +61,7 @@ defineExpose({ simClick, printData, simFlag });
     <!-- bomb bombed -->
     <td
         v-else-if="clicked && props.cellData.isBomb === '¤'"
-        style="background-color: red"
+        style="background-color: #722f37"
     >
         <p>💣</p>
     </td>
@@ -86,11 +86,18 @@ defineExpose({ simClick, printData, simFlag });
 p {
     margin: 0;
     padding: 0;
+    line-height: 100%;
+    --cell-size: 2rem;
+    min-width: var(--cell-size);
+    min-height: var(--cell-size);
+    max-width: var(--cell-size);
+    max-height: var(--cell-size);
+    line-height: var(--cell-size);
 }
 
 td,
 button {
-    --cell-size: 25px;
+    --cell-size: 2rem;
     min-width: var(--cell-size);
     min-height: var(--cell-size);
     max-width: var(--cell-size);
@@ -106,7 +113,7 @@ button {
 }
 
 button {
-    --cell-size: 25px;
+    --cell-size: 2rem;
     min-width: var(--cell-size);
     min-height: var(--cell-size);
     max-width: var(--cell-size);
