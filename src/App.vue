@@ -6,6 +6,8 @@ import { ref } from "vue";
 const boardKey = ref(0);
 const smiley = ref(null);
 const timerRef = ref(null);
+const flaggedCount = ref(0);
+const bombs = ref(10);
 
 function resetBoard() {
     smiley.value.innerText = "🙂";
@@ -26,18 +28,21 @@ function gameWon() {
 
 <template>
     <div class="stats">
-        <div class="flags">000</div>
+        <div class="flags">
+            {{ String(bombs - flaggedCount).padStart(3, "0") }}
+        </div>
         <button ref="smiley" class="smiley" @click="resetBoard">🙂</button>
         <div class="time"><Timer ref="timerRef" /></div>
     </div>
     <Board
         :width="10"
         :height="10"
-        :bombs="10"
+        :bombs="bombs"
         :key="boardKey"
         @gameOver="gameOver"
         @gameWon="gameWon"
         @firstClick="timerRef.startTimer()"
+        @flaggedCount="flaggedCount = $event"
     />
 </template>
 

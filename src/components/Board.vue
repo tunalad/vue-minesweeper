@@ -8,10 +8,16 @@ const props = defineProps({
     bombs: Number,
 });
 
-const emits = defineEmits(["gameOver", "gameWon", "firstClick"]);
+const emits = defineEmits([
+    "gameOver",
+    "gameWon",
+    "firstClick",
+    "flaggedCount",
+]);
 
 const board = generateBoard(props.width, props.height, props.bombs);
 let boardState = board;
+let cellsFlagged = ref(0);
 
 const cellButtons = ref({});
 
@@ -126,6 +132,11 @@ function checkLeftCells(x, y) {
         }
     }
 }
+
+function countFlagged(isFlagged) {
+    cellsFlagged.value += isFlagged ? 1 : -1;
+    emits("flaggedCount", cellsFlagged.value);
+}
 </script>
 
 <template>
@@ -145,6 +156,7 @@ function checkLeftCells(x, y) {
                 @zeroClick="zeroClick"
                 @mineClicked="mineClicked"
                 @click="checkLeftCells(rowI, cellI)"
+                @updateFlagged="countFlagged"
             />
         </tr>
     </table>

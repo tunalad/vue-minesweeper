@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps({
     cellData: Object,
     isGameOver: Boolean,
 });
-const emits = defineEmits(["zeroClick", "mineClicked"]);
+const emits = defineEmits(["zeroClick", "mineClicked", "updateFlagged"]);
 
 const clicked = ref(false);
 const flagged = ref(false);
@@ -30,6 +30,10 @@ function simFlag() {
 function flagButton() {
     flagged.value = !flagged.value;
 }
+
+watch(flagged, (newValue) => {
+    emits("updateFlagged", newValue);
+});
 
 defineExpose({ simClick, printData, simFlag });
 </script>
