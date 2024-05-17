@@ -13,6 +13,7 @@ function resetBoard() {
     smiley.value.innerText = "🙂";
     boardKey.value++;
     timerRef.value.resetTimer();
+    flaggedCount.value = 0;
 }
 
 function gameOver() {
