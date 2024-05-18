@@ -12,7 +12,8 @@ const height = ref(9);
 const width = ref(9);
 const bombs = ref(10);
 
-const customDif = ref(false);
+const difficulty = ref(0); // 0 (easy) - 3 (custom)
+
 const customDifBoard = ref({
     height: 3,
     width: 3,
@@ -48,45 +49,47 @@ function setDifficulty(board) {
     <div class="difficulty">
         <a
             href="#"
+            :class="{ 'selection-indicator': difficulty === 0 }"
             @click="
                 setDifficulty({ height: 9, width: 9, bombs: 10 });
-                customDif = false;
+                difficulty = 0;
             "
             >Easy</a
         >
         <a
             href="#"
+            :class="{ 'selection-indicator': difficulty === 1 }"
             @click="
                 setDifficulty({ height: 16, width: 16, bombs: 40 });
-                customDif = false;
+                difficulty = 1;
             "
             >Medium</a
         >
         <a
             href="#"
+            :class="{ 'selection-indicator': difficulty === 2 }"
             @click="
                 setDifficulty({ height: 16, width: 30, bombs: 99 });
-                customDif = false;
+                difficulty = 2;
             "
             >Hard</a
         >
         <a
             href="#"
+            :class="{ 'selection-indicator': difficulty === 3 }"
             @click="
-                customDif = true;
+                difficulty = 3;
                 resetBoard();
             "
             >Custom</a
         >
     </div>
-    <div class="custom-dif" v-if="customDif">
+    <div class="custom-dif" v-if="difficulty === 3">
         <form>
             <span>Height: </span>
             <input v-model="customDifBoard.height" name="height" />
-            <br />
             <span>Width: </span>
             <input v-model="customDifBoard.width" name="width" />
-            <br />
             <span>Mines: </span>
             <input v-model="customDifBoard.bombs" name="bombs" />
             <br />
@@ -126,14 +129,15 @@ function setDifficulty(board) {
 </template>
 
 <style scoped>
-.difficulty {
-    display: flex;
-    justify-content: space-evenly;
-}
 .difficulty a {
-    padding: 0 0.25rem;
+    padding: 0 0.5rem;
 }
-
+.custom-dif input {
+    padding-right: 0.5rem;
+}
+.custom-dif span {
+    padding-left: 0.5rem;
+}
 .board-wrapper {
     display: flex;
     justify-content: center;
@@ -164,5 +168,9 @@ function setDifficulty(board) {
 .custom-dif input {
     max-width: 3rem;
     max-height: 3rem;
+}
+
+.selection-indicator {
+    text-decoration: underline;
 }
 </style>
