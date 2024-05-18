@@ -7,6 +7,9 @@ const boardKey = ref(0);
 const smiley = ref(null);
 const timerRef = ref(null);
 const flaggedCount = ref(0);
+
+const height = ref(9);
+const width = ref(9);
 const bombs = ref(10);
 
 function resetBoard() {
@@ -25,9 +28,27 @@ function gameWon() {
     smiley.value.innerText = "😎";
     timerRef.value.stopTimer();
 }
+
+function setDifficulty(board) {
+    height.value = board.height;
+    width.value = board.width;
+    bombs.value = board.bombs;
+    resetBoard();
+}
 </script>
 
 <template>
+    <div class="difficulty">
+        <a href="#" @click="setDifficulty({ height: 9, width: 9, bombs: 10 })"
+            >Easy</a
+        >
+        <a href="#" @click="setDifficulty({ height: 16, width: 16, bombs: 40 })"
+            >Medium</a
+        >
+        <a href="#" @click="setDifficulty({ height: 16, width: 30, bombs: 99 })"
+            >Hard</a
+        >
+    </div>
     <div class="stats">
         <div class="flags">
             {{ String(bombs - flaggedCount).padStart(3, "0") }}
@@ -36,8 +57,8 @@ function gameWon() {
         <div class="time"><Timer ref="timerRef" /></div>
     </div>
     <Board
-        :width="10"
-        :height="10"
+        :width="width"
+        :height="height"
         :bombs="bombs"
         :key="boardKey"
         @gameOver="gameOver"
@@ -48,6 +69,10 @@ function gameWon() {
 </template>
 
 <style scoped>
+.difficulty {
+    display: flex;
+    justify-content: space-evenly;
+}
 .board {
     border-radius: 0.25rem;
 }

@@ -25,10 +25,10 @@ const firstClickMade = ref(false);
 const isGameOver = ref(false);
 
 function generateBoard(width, height, mines) {
-    let array = new Array(width);
+    let array = new Array(height);
 
     for (let i = 0; i < array.length; i++) {
-        array[i] = new Array(height).fill("X");
+        array[i] = new Array(width).fill("X");
     }
 
     let minesCount = mines;
@@ -37,8 +37,8 @@ function generateBoard(width, height, mines) {
         const x = Math.floor(Math.random() * width);
         const y = Math.floor(Math.random() * height);
 
-        if (array[x][y] == "X") {
-            array[x][y] = "¤";
+        if (array[y][x] == "X") {
+            array[y][x] = "¤";
             minesCount--;
         }
     }
@@ -49,10 +49,10 @@ function generateBoard(width, height, mines) {
 function checkNeighbours(x, y) {
     let neighboursCount = 0;
 
-    for (let i = x - 1; i <= x + 1; i++) {
+    for (let i = y - 1; i <= y + 1; i++) {
         if (i >= 0 && i < board.length)
-            for (let j = y - 1; j <= y + 1; j++) {
-                if (j >= 0 && j < board.length)
+            for (let j = x - 1; j <= x + 1; j++) {
+                if (j >= 0 && j < board[0].length)
                     if (board[i][j] === "¤") neighboursCount++;
             }
     }
@@ -65,11 +65,11 @@ function zeroClick(data) {
         let x = data.x;
         let y = data.y;
 
-        for (let i = x - 1; i <= x + 1; i++) {
+        for (let i = y - 1; i <= y + 1; i++) {
             if (i >= 0 && i < board.length) {
-                for (let j = y - 1; j <= y + 1; j++) {
-                    if (j >= 0 && j < board.length && (i !== x || j !== y)) {
-                        simClick(i, j);
+                for (let j = x - 1; j <= x + 1; j++) {
+                    if (j >= 0 && j < board[0].length && (i !== y || j !== x)) {
+                        simClick(j, i);
                         boardState[i][j] = "c";
                     }
                 }
@@ -96,9 +96,9 @@ function mineClicked(e) {
     emits("gameOver");
     isGameOver.value = true;
 
-    for (let i = 0; i < props.width; i++) {
-        for (let j = 0; j < props.height; j++) {
-            if (boardState[i][j] === "¤") simClick(i, j, false, true);
+    for (let i = 0; i < props.height; i++) {
+        for (let j = 0; j < props.width; j++) {
+            if (boardState[i][j] === "¤") simClick(j, i, false, true);
         }
     }
 }
@@ -109,7 +109,7 @@ function checkLeftCells(x, y) {
         emits("firstClick");
     }
 
-    boardState[x][y] = "c";
+    boardState[y][x] = "c";
     // count non "c" items in this 2d array
 
     let count_c = 0;
@@ -125,9 +125,9 @@ function checkLeftCells(x, y) {
         emits("gameWon");
         isGameOver.value = true;
 
-        for (let i = 0; i < props.width; i++) {
-            for (let j = 0; j < props.height; j++) {
-                if (boardState[i][j] === "¤") simClick(i, j, true, false);
+        for (let i = 0; i < props.height; i++) {
+            for (let j = 0; j < props.width; j++) {
+                if (boardState[i][j] === "¤") simClick(j, i, true, false);
             }
         }
     }
@@ -146,16 +146,16 @@ function countFlagged(isFlagged) {
                 v-for="(cell, cellI) in row"
                 :key="cellI"
                 :cellData="{
-                    x: rowI,
-                    y: cellI,
+                    x: cellI,
+                    y: rowI,
                     isBomb: cell,
-                    neighbours: checkNeighbours(rowI, cellI),
+                    neighbours: checkNeighbours(cellI, rowI),
                 }"
                 :isGameOver="isGameOver"
-                :ref="(el) => (cellButtons[`cell-${rowI}-${cellI}`] = el)"
+                :ref="(el) => (cellButtons[`cell-${cellI}-${rowI}`] = el)"
                 @zeroClick="zeroClick"
                 @mineClicked="mineClicked"
-                @click="checkLeftCells(rowI, cellI)"
+                @click="checkLeftCells(cellI, rowI)"
                 @updateFlagged="countFlagged"
             />
         </tr>
