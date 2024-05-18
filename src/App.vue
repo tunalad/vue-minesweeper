@@ -1,7 +1,7 @@
 <script setup>
 import Board from "./components/Board.vue";
 import Timer from "./components/Timer.vue";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 
 const boardKey = ref(0);
 const smiley = ref(null);
@@ -14,7 +14,7 @@ const bombs = ref(10);
 
 const difficulty = ref(0); // 0 (easy) - 3 (custom)
 
-const customDifBoard = ref({
+const customDifBoard = reactive({
     height: 3,
     width: 3,
     bombs: 1,
@@ -37,12 +37,30 @@ function gameWon() {
     timerRef.value.stopTimer();
 }
 
-function setDifficulty(board) {
-    height.value = parseInt(board.height);
-    width.value = parseInt(board.width);
-    bombs.value = parseInt(board.bombs);
+function setDifficulty(boardCustom) {
+    let maxMines = 999
+
+    if(boardCustom.height < 3)
+        boardCustom.height = 3;
+    if(boardCustom.width < 3)
+        boardCustom.width = 3;
+    if(boardCustom.bombs < 2)
+        boardCustom.bombs = 2;
+
+    maxMines = Math.floor((boardCustom.height * boardCustom.width) / Math.PI);
+
+    if (maxMines < boardCustom.bombs) {
+        boardCustom.bombs = maxMines;
+        customDifBoard.bombs = maxMines;
+    }
+
+    height.value = parseInt(boardCustom.height);
+    width.value = parseInt(boardCustom.width);
+    bombs.value = parseInt(boardCustom.bombs);
+
     resetBoard();
 }
+
 </script>
 
 <template>
